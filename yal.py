@@ -40,6 +40,7 @@ def terminate():
     sys.exit()
 
 
+map_name = input("Введите имя файла уровня\n")
 pygame.init()
 clock = pygame.time.Clock()
 size = WIDTH, HEIGHT = 550, 550
@@ -82,7 +83,7 @@ tile_images = {
     'wall': load_image('box.png'),
     'empty': load_image('grass.png')
 }
-player_image = load_image('mar.png')
+player_image = load_image("mar.png")
 
 tile_width = tile_height = 50
 
@@ -149,7 +150,7 @@ class Camera:
         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
 
 
-player, level_x, level_y, player_x, player_y = generate_level(load_level('map.txt'))
+player, level_x, level_y, player_x, player_y = generate_level(load_level(map_name))
 camera = Camera()
 
 running = True
