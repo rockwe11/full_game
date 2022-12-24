@@ -43,7 +43,7 @@ def terminate():
 map_name = input("Введите имя файла уровня\n")
 pygame.init()
 clock = pygame.time.Clock()
-size = WIDTH, HEIGHT = 550, 550
+size = WIDTH, HEIGHT = 600, 600
 screen = pygame.display.set_mode(size)
 screen.fill((0, 0, 0))
 
@@ -125,7 +125,7 @@ def generate_level(level):
                 Tile('empty', x, y)
                 new_player = Player(x, y)
     # вернем игрока, а также размер поля в клетках
-    return new_player, x, y
+    return new_player, x + 1, y + 1
 
 
 class Camera:
@@ -143,6 +143,22 @@ class Camera:
     def update(self, target):
         self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
+        if self.dy == tile_height:
+            down_sprites = sorted(tiles_group.sprites(), key=lambda x: x.rect.y, reverse=True)[:level_x]
+            for sprite in down_sprites:
+                sprite.rect.y -= tile_height * level_y
+        elif self.dy == -tile_height:
+            up_sprites = sorted(tiles_group.sprites(), key=lambda x: x.rect.y)[:level_x]
+            for sprite in up_sprites:
+                sprite.rect.y += tile_height * level_y
+        if self.dx == tile_width:
+            right_sprites = sorted(tiles_group.sprites(), key=lambda x: x.rect.x, reverse=True)[:level_y]
+            for sprite in right_sprites:
+                sprite.rect.x -= tile_width * level_x
+        elif self.dx == -tile_width:
+            left_sprites = sorted(tiles_group.sprites(), key=lambda x: x.rect.x)[:level_y]
+            for sprite in left_sprites:
+                sprite.rect.x += tile_width * level_x
 
 
 player, level_x, level_y = generate_level(load_level(map_name))
