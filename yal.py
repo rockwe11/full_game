@@ -103,10 +103,6 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect().move(
             tile_width * pos_x + 15, tile_height * pos_y + 5)
 
-    def update(self):
-        self.rect = self.image.get_rect().move(
-            tile_width * player_x + 15, tile_height * player_y + 5)
-
 
 # основной персонаж
 player = None
@@ -128,9 +124,8 @@ def generate_level(level):
             elif level[y][x] == '@':
                 Tile('empty', x, y)
                 new_player = Player(x, y)
-                player_x, player_y = x, y
     # вернем игрока, а также размер поля в клетках
-    return new_player, x, y, player_x, player_y
+    return new_player, x, y
 
 
 class Camera:
@@ -150,7 +145,7 @@ class Camera:
         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
 
 
-player, level_x, level_y, player_x, player_y = generate_level(load_level(map_name))
+player, level_x, level_y = generate_level(load_level(map_name))
 camera = Camera()
 
 running = True
@@ -160,18 +155,18 @@ while True:
             terminate()
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                player_y -= 1
+                player.rect.y -= tile_height
             elif event.key == pygame.K_DOWN:
-                player_y += 1
+                player.rect.y += tile_height
             elif event.key == pygame.K_LEFT:
-                player_x -= 1
+                player.rect.x -= tile_width
             elif event.key == pygame.K_RIGHT:
-                player_x += 1
+                player.rect.x += tile_width
 
-    # camera.update(player)
-    # for sprite in all_sprites:
-    #     camera.apply(sprite)
-    player_group.update()
+    screen.fill((0, 0, 0))
+    camera.update(player)
+    for sprite in all_sprites:
+        camera.apply(sprite)
     tiles_group.draw(screen)
     player_group.draw(screen)
     pygame.display.flip()
